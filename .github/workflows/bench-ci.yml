@@ -1,0 +1,19 @@
+# merget-harness live benchmark CI: the recipe the benchmark VM discovered for
+# this corpus, run on every pull request, on main and on sema's batch branches.
+# The corpus's own workflows are removed on the mirror (docs/SCENARIOS.md "bench").
+name: bench-ci
+on:
+  push:
+    branches:
+      - "main"
+      - "sema/queue/**"
+  pull_request: {}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo check --workspace --all-features
+      - run: cargo test --workspace --no-run
